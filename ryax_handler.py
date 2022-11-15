@@ -65,7 +65,7 @@ def handle(module_input):
 
     resume = ""
 
-    TMP_DIR = "/home/christos/Desktop"
+    TMP_DIR = "/tmp"
 
     output_backup_folder = TMP_DIR + "/python_outputs/backup/"
     output_stats_folder = TMP_DIR + "/python_outputs/flow/"
