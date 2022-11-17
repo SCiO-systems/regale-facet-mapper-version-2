@@ -51,16 +51,18 @@ def handle(module_input):
 
 
     # folder = sys.argv[1] #"../../python_outputs/"
-    use_spark = module_input["use_spark"]
-    end = module_input["end"]
-    n_remove = module_input["n_remove"]
-    procedure = module_input["procedure"]
-    zone = module_input["zone"]
-    out_format = module_input["out_format"]
-    clean = module_input["clean"]
-    verbose = module_input["verbose"]
-    quiet = module_input["quiet"]
-    log = module_input["log"]
+    use_spark = module_input["hyperparameters"]["use_spark"]
+    end = module_input["hyperparameters"]["end"]
+    n_remove = module_input["hyperparameters"]["n_remove"]
+    procedure = module_input["hyperparameters"]["procedure"]
+    zone = module_input["hyperparameters"]["zone"]
+    out_format = module_input["hyperparameters"]["out_format"]
+    clean = module_input["hyperparameters"]["clean"]
+    verbose = module_input["hyperparameters"]["verbose"]
+    quiet = module_input["hyperparameters"]["quiet"]
+    log = module_input["hyperparameters"]["log"]
+    nrow = module_input["hyperparameters"]["nrow"]
+    ncol = module_input["hyperparameters"]["ncol"]
 
 
     resume = ""
@@ -266,15 +268,15 @@ def handle(module_input):
 
     df_for_tif = df_for_tif.drop(df_for_tif[df_for_tif["buffer"]==True].index)
 
-    first_option_array = np.reshape(df_for_tif["max_facet"].to_numpy(), (90,90))
+    first_option_array = np.reshape(df_for_tif["max_facet"].to_numpy(), (ncol,nrow))
 
     # print(type(first_option_array[0][0]))
     #%%
     y = remove_buffer(df_for_tif)
 
     first_option_array = 100*y["row"] + y["col"]
-    first_option_array = np.reshape(first_option_array.to_numpy(), (90,90))
-    first_option_array = np.reshape(y["max_facet"].to_numpy(), (90,90))
+    first_option_array = np.reshape(first_option_array.to_numpy(), (ncol,nrow))
+    first_option_array = np.reshape(y["max_facet"].to_numpy(), (ncol,nrow))
     #%%
 
     labels_transition_dictionary = {}

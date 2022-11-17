@@ -12,6 +12,8 @@
     "clean" : false,
     "verbose" : false,
     "quiet" : false,
-    "log" : true
+    "log" : true,
+    "nrow" : 72,
+    "ncol" : 110
   }
 }
