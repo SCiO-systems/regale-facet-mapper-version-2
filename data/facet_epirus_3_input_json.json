@@ -1,6 +1,6 @@
 {
   "arule" : "./data/arule.csv",
-  "crule" : null,
+  "crule" : "./data/crule.csv",
   "hyperparameters": 
   {
     "use_spark" : true,
@@ -13,7 +13,7 @@
     "verbose" : false,
     "quiet" : false,
     "log" : true,
-    "nrow" : 72,
-    "ncol" : 110
+    "nrow" : 110,
+    "ncol" : 72
   }
 }

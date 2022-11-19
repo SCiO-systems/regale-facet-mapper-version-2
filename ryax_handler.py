@@ -14,6 +14,7 @@ from datar import dplyr,tidyr
 from datar.all import f
 import datar
 from tifffile import imsave,imwrite
+import json
 
 #import from other files
 from LITAP_functions import *
@@ -43,12 +44,13 @@ def handle(module_input):
     # With a `zone` defined for each `seqno`. `zone` file can be either dem (.dem), Excel (.xlsx, .xls), or text (.txt, .csv, .dat)
 
 
+
+
     crule = module_input["crule"]
     arule = module_input["arule"] #"/home/christos/Desktop/SCiO_Projects/REGALE/landmapr/LITAP/inst/extdata/arule.dbf"
-    
-    with open(module_input["input_json"], 'r') as f:
-          module_input = json.load(f) 
 
+    with open(module_input["input_json"], 'r') as file_:
+          module_input = json.load(file_) 
 
     # folder = sys.argv[1] #"../../python_outputs/"
     use_spark = module_input["hyperparameters"]["use_spark"]
@@ -68,11 +70,12 @@ def handle(module_input):
     resume = ""
 
     TMP_DIR = "/tmp"
+    # TMP_DIR = "/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/"
 
-    output_backup_folder = TMP_DIR + "/python_outputs/backup/"
-    output_stats_folder = TMP_DIR + "/python_outputs/flow/"
+    # output_backup_folder = TMP_DIR + "/python_outputs/backup/"
+    # output_stats_folder = TMP_DIR + "/python_outputs/facet/"
 
-    out_directory = TMP_DIR + "/python_outputs"
+    out_directory = TMP_DIR + "/python_outputs/"
 
     #%% 
     def arule_derive(weti, relief, n_remove):
@@ -216,8 +219,9 @@ def handle(module_input):
     arule = format_rule(arule,"arule")
 
     # cfile = crule
-    cfile = folder + "data/crule.csv"
-    crule = pd.read_csv(cfile)
+    # folder = "~/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/facet_mapper_version_2/"
+    # cfile = folder + "data/crule.csv"
+    crule = pd.read_csv(crule)
     crule.columns = [x.lower() for x in crule.columns]
     crule = format_rule(crule,"crule")
 
@@ -295,3 +299,11 @@ def handle(module_input):
 
     return {'output_file' : output_file}
     
+
+f1 = {"input_json" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/facet_mapper_version_2/data/facet_epirus_3_input_json.json",
+  "arule" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/facet_mapper_version_2/data/arule.csv" ,
+  "crule" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/facet_mapper_version_2/data/crule.csv"
+  }
+
+t = handle(f1)
+print(t)
