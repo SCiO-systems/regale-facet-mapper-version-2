@@ -277,5 +277,7 @@ def fuzc_max(fuzc):
     return dplyr.bind_cols(fuzc, d)
 
 def lsm_fuzc(fuzzattr, crule,first_element_not_buffer,use_spark=True):
-    
-    return fuzc_max(fuzc_sum(fuzzattr, crule,first_element_not_buffer,use_spark=True))
+    print("YES")
+    k = fuzc_sum(fuzzattr, crule,first_element_not_buffer,use_spark=True)
+    # return k
+    return fuzc_max(k)

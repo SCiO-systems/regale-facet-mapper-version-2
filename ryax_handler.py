@@ -29,10 +29,10 @@ from facet_04_arule_derive import *
 import warnings
 warnings.filterwarnings("ignore")
 
-
+#%%
 def handle(module_input):
 
-    #%% Initializing parameters
+    # Initializing parameters
 
     # folder Character. Location of [facet_mapper()] output
     # arule Character. Location of ARULE file. If NULL, A Rules are derived from the dem file (see Details).
@@ -42,7 +42,6 @@ def handle(module_input):
     # procedure Character. Which LSM procedure to use. One of `lsm` (Original LandMapR program) or `bc_pem` (newer BC-PEM Direct-to-Site-SEries DSS program).
     # ARULE zone file. If `procedure = "bc_pem"`, zones must either be defined for each seqno in the weti dem file, OR must be provided as an index file here. 
     # With a `zone` defined for each `seqno`. `zone` file can be either dem (.dem), Excel (.xlsx, .xls), or text (.txt, .csv, .dat)
-
 
 
 
@@ -69,13 +68,13 @@ def handle(module_input):
 
     resume = ""
 
-    TMP_DIR = "/tmp"
-    # TMP_DIR = "/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/"
+    # TMP_DIR = "/tmp"
+    TMP_DIR = "/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/"
 
     # output_backup_folder = TMP_DIR + "/python_outputs/backup/"
     # output_stats_folder = TMP_DIR + "/python_outputs/facet/"
 
-    out_directory = TMP_DIR + "/python_outputs/"
+    out_directory = TMP_DIR + "/python_epirus_3_example_outputs/"
 
     #%% 
     def arule_derive(weti, relief, n_remove):
@@ -261,27 +260,15 @@ def handle(module_input):
 
     # get_previous but not sure if needed because will not start from this point on 
     # most probably but will be a continuous flow of the script
-
     first_element_not_buffer = (db["buffer"]==False).idxmax()
     fuzzattr = lsm_fuzc(fuzzattr, crule,first_element_not_buffer)
 
     save_output2(data=fuzzattr, name="fuzc", locs=out_directory, out_format=out_format, where = "facet", add_db=db[["seqno", "buffer", "row", "col"]])
-
-    #%%
-    df_for_tif = dplyr.bind_cols(fuzzattr, db[["buffer","row","col"]])
-
-    df_for_tif = df_for_tif.drop(df_for_tif[df_for_tif["buffer"]==True].index)
+#%%
+    classes = np.unique(crule["f_name"]).tolist()
+    df_for_tif = fuzzattr.loc[(fuzzattr[classes].sum(axis=1) != 0)]
 
     first_option_array = np.reshape(df_for_tif["max_facet"].to_numpy(), (ncol,nrow))
-
-    # print(type(first_option_array[0][0]))
-    #%%
-    y = remove_buffer(df_for_tif)
-
-    first_option_array = 100*y["row"] + y["col"]
-    first_option_array = np.reshape(first_option_array.to_numpy(), (ncol,nrow))
-    first_option_array = np.reshape(y["max_facet"].to_numpy(), (ncol,nrow))
-    #%%
 
     labels_transition_dictionary = {}
     for i,uniq in enumerate(np.unique(first_option_array)):
@@ -298,12 +285,17 @@ def handle(module_input):
     imwrite(output_file, first_option_array)
 
     return {'output_file' : output_file}
-    
+#%%
 
 f1 = {"input_json" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/facet_mapper_version_2/data/facet_epirus_3_input_json.json",
   "arule" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/facet_mapper_version_2/data/arule.csv" ,
   "crule" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/facet_mapper_version_2/data/crule.csv"
   }
+
+# f1 = {"input_json" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/facet_mapper_version_2/data/facet_input_json.json",
+#   "arule" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/facet_mapper_version_2/data/arule.csv" ,
+#   "crule" :"/home/christos/Desktop/SCiO_Projects/REGALE/regale-ryax-modules/facet_mapper_version_2/data/crule.csv"
+#   }
 
 t = handle(f1)
 print(t)
